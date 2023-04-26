@@ -1,11 +1,12 @@
 using TransactionService.Api;
 using TransactionService.Application;
+using TransactionService.Infrastructure;
 
 var CorsOrigins = "CorsOriginsAllowed";
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationServices(builder.Configuration);
-// builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
 builder.Services.AddCors(options =>
 {
@@ -29,9 +30,9 @@ app.UseCors(CorsOrigins);
 app.MapControllers();
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
-// using(var scope = app.Services.CreateScope()){
-//     var dbContextInitialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
-//     await dbContextInitialiser.Migrate();
-// }
+using(var scope = app.Services.CreateScope()){
+    var dbContextInitialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
+    await dbContextInitialiser.Migrate();
+}
 
 app.Run();

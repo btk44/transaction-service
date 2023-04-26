@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TransactionService.Application.Interfaces;
 using TransactionService.Application.Models;
 
-namespace TransactionService.Application.Transactions;
+namespace TransactionService.Application.Commands;
 
 public class TransactionSearchCommand {
     public DateTime DateFrom { get; set; }
@@ -33,7 +33,7 @@ public class TransactionSearchCommandHandler
         _transactionMapper = mapper;
     }
 
-    public async Task<List<TransactionDto>> Handle(TransactionSearchCommand command, CancellationToken cancellationToken)
+    public async Task<List<TransactionDto>> Handle(TransactionSearchCommand command)
     {
         var transactionQuery = _dbContext.Transactions
                 .Where(x => x.OwnerId == command.OwnerId && 
