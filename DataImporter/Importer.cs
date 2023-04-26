@@ -23,13 +23,13 @@ public class TransactionRow{
     public string Payee { get; set; }
 
     [CsvHelper.Configuration.Attributes.Index(5)]
-    public int CategoryId { get; set; }
+    public string CategoryId { get; set; }
 
     [CsvHelper.Configuration.Attributes.Index(6)]
     public string CategoryName { get; set; }
 
     [CsvHelper.Configuration.Attributes.Index(7)]
-    public int SubCategoryId { get; set; }
+    public string SubCategoryId { get; set; }
 
     [CsvHelper.Configuration.Attributes.Index(8)]
     public string SubCategoryName { get; set; }
@@ -75,33 +75,34 @@ public class Importer {
                 accounts.Add(newAccount.Name, newAccount);
             }
 
-            if (record.CategoryId <= 0)
+            if (string.IsNullOrEmpty(record.CategoryId))
                 throw new Exception("no category");
             
-            if (record.SubCategoryId <= 0)
+            if (string.IsNullOrEmpty(record.SubCategoryId))
                 throw new Exception("no subcategory");
 
             if(!categories.ContainsKey(record.CategoryName)){
                 var newCategory = new Category(){
                     Name = record.CategoryName,
                     OwnerId = 1,
-                    SubCategories = new List<Category>() {
-                        new Category(){
-                            Name = record.SubCategoryName,
-                            OwnerId = 1,
-                            //ParentId = null
-                        }
-                    }
+                    SubCategories = new List<Category>() 
                 };
+
+                if (!string.IsNullOrEmpty(record.SubCategoryName)){
+                    newCategory.SubCategories.Add(new Category(){
+                            Name = record.SubCategoryName,
+                            OwnerId = 1
+                        });
+                }
 
                 await _dbContext.Categories.AddAsync(newCategory);
                 categories.Add(newCategory.Name, newCategory);
-            } else if(categories[record.CategoryName].SubCategories.All(x => x.Name != record.SubCategoryName)) {
+            } else if(!string.IsNullOrEmpty(record.SubCategoryName) && categories[record.CategoryName].SubCategories.All(x => x.Name != record.SubCategoryName)) {
                 var parentCategory = categories[record.CategoryName];
 
                 parentCategory.SubCategories.Add(new Category(){
                     Name = record.SubCategoryName,
-                    OwnerId = 1,
+                    OwnerId = 1
                 });
             }
 
