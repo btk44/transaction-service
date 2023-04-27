@@ -47,8 +47,10 @@ public class CategorySearchCommandHandler
 
         var categories = await categoryQuery.Select(x => _categoryMapper.Map<CategoryDto>(x)).ToListAsync();
 
-        if(!command.ReturnTreeStructure)
+        if(!command.ReturnTreeStructure){
+            categories.ForEach(x =>  x.Subcategories = null);
             return categories;
+        }
 
         var categoriesTree = categories.Where(x => x.ParentId == 0).ToList();
         Dictionary<int, CategoryDto> parentCategories = categories.Where(x => x.ParentId == 0).ToDictionary(x => x.Id);
