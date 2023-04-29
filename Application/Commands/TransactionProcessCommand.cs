@@ -8,7 +8,7 @@ using TransactionService.Domain.Types;
 namespace TransactionService.Application.Commands;
 
 public class TransactionProcessCommand {
-    public int ProcessingUserId { get; set; }
+    //public int ProcessingUserId { get; set; }
     public List<TransactionDto> Transactions { get; set; }
 }
 
