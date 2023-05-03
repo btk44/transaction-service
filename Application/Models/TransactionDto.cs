@@ -10,5 +10,6 @@ public class TransactionDto {
     public int CategoryId { get; set; }
     public string Comment { get; set; }
     public string GroupKey { get; set; }
+    public List<TransactionDto> GroupTransactions { get; set; }
     public bool Active { get; set; }
 }

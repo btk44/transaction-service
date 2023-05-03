@@ -18,6 +18,7 @@ public class TransactionSearchCommand {
     public bool Active { get; set; }
     public bool ActiveDefined { get; set; }
     public List<int> Accounts { get; set; }
+    public bool IncludeGroupTransactions { get; set; }
     public int Take { get; set; }
     public int Offset { get; set; }
 }
@@ -64,6 +65,25 @@ public class TransactionSearchCommandHandler
         if(command.Accounts.Any())
             transactionQuery = transactionQuery.Where(x => command.Accounts.Contains(x.AccountId));
 
-        return await transactionQuery.Select(x => _transactionMapper.Map<TransactionDto>(x)).ToListAsync();
+        var transactions = await transactionQuery
+                                    .Skip(command.Offset)
+                                    .Take(command.Take)
+                                    .Select(x => _transactionMapper.Map<TransactionDto>(x)).ToListAsync();
+
+        if(command.IncludeGroupTransactions){
+            var transactionsWithGroup = transactions.Where(x => !string.IsNullOrEmpty(x.GroupKey));
+            var groupKeys = transactionsWithGroup.Select(x => x.GroupKey);
+
+            var connectedTransactions = await _dbContext.Transactions
+                                .Where(x => x.OwnerId == command.OwnerId && groupKeys.Contains(x.GroupKey)).ToListAsync();
+
+            foreach(var transaction in transactionsWithGroup){
+                transaction.GroupTransactions = connectedTransactions
+                                    .Where(x => x.GroupKey == transaction.GroupKey && x.Id != transaction.Id)
+                                    .Select(x => _transactionMapper.Map<TransactionDto>(x)).ToList();
+            }
+        }
+
+        return transactions;
     }
 }
