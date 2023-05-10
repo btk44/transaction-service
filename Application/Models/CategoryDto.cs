@@ -7,4 +7,5 @@ public class CategoryDto {
     public int ParentId { get; set; }
     public bool Active { get; set; }
     public List<CategoryDto> Subcategories { get; set; }
+    public string Color { get; set; }
 }

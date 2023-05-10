@@ -7,4 +7,5 @@ public class AccountDto {
     public double Amount { get; set; }
     public int CurrencyId { get; set; }
     public bool Active { get; set; }
+    public string Color { get; set; }
 }

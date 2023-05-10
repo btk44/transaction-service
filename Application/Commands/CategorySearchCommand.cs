@@ -47,6 +47,12 @@ public class CategorySearchCommandHandler
 
         var categories = await categoryQuery.Select(x => _categoryMapper.Map<CategoryDto>(x)).ToListAsync();
 
+        // consider movig it elswhere:
+        var categoriesIds = categories.Select(x => x.Id);
+        var visualProps = await _dbContext.VisualProperties.Where(x => x.ObjectName == "Category" && categoriesIds.Contains(x.ObjectId)).ToDictionaryAsync(x => x.ObjectId);
+        categories.ForEach(x => x.Color = visualProps[x.Id].Color);
+        //----
+
         if(!command.ReturnTreeStructure){
             categories.ForEach(x =>  x.Subcategories = null);
             return categories;

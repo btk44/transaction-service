@@ -128,7 +128,7 @@ public class Importer {
             if (!visualproperties.Any(x => x.ObjectId == accountEntity.Id && x.ObjectName == "Account")){
                 await _dbContext.VisualProperties.AddAsync(new VisualProperties(){
                     ObjectId = accountEntity.Id,
-                    ObjectName = nameof(accountEntity)
+                    ObjectName = "Account"
                 });
             }
         }
@@ -138,14 +138,14 @@ public class Importer {
             if (!visualproperties.Any(x => x.ObjectId == categoryEntity.Id && x.ObjectName == "Category")){
                 await _dbContext.VisualProperties.AddAsync(new VisualProperties(){
                     ObjectId = categoryEntity.Id,
-                    ObjectName = nameof(categoryEntity)
+                    ObjectName = "Category"
                 });
             } 
             foreach(var subcategory in categoryEntity.SubCategories){
                 if (!visualproperties.Any(x => x.ObjectId == subcategory.Id && x.ObjectName == "Category")){
                     await _dbContext.VisualProperties.AddAsync(new VisualProperties(){
                         ObjectId = subcategory.Id,
-                        ObjectName = nameof(subcategory)
+                        ObjectName = "Category"
                     });
                 } 
             }

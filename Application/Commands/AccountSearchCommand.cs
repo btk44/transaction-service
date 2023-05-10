@@ -48,6 +48,14 @@ public class AccountSearchCommandHandler
         if(command.Id > 0)
             accountQuery = accountQuery.Where(x => x.Id == command.Id);
 
-        return await accountQuery.Select(x => _mapper.Map<AccountDto>(x)).ToListAsync();
+        var accounts = await accountQuery.Select(x => _mapper.Map<AccountDto>(x)).ToListAsync();
+
+        // consider movig it elswhere:
+        var accountIds = accounts.Select(x => x.Id);
+        var visualProps = await _dbContext.VisualProperties.Where(x => x.ObjectName == "Account" && accountIds.Contains(x.ObjectId)).ToDictionaryAsync(x => x.ObjectId);
+        accounts.ForEach(x => x.Color = visualProps[x.Id].Color);
+        //----
+
+        return accounts;
     }
 }
