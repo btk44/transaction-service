@@ -3,6 +3,7 @@ using TransactionService.Application.Models;
 using TransactionService.Application.Commands;
 using AutoMapper;
 using TransactionService.Application.Interfaces;
+using TransactionService.DataImporter;
 
 namespace TransactionService.Api;
 
@@ -23,5 +24,12 @@ public class AccountController
     public async Task<ActionResult<List<AccountDto>>> Search([FromBody] AccountSearchCommand command){
         var accountSearchCommandHandler = new AccountSearchCommandHandler(_dbContext, _mapper);
         return await accountSearchCommandHandler.Handle(command);
+    }
+
+    [HttpGet()]
+    public async Task<ActionResult<bool>> ImportStuff(){ // to do : remove it later
+        var importer = new Importer(_dbContext);
+        await importer.ImportFromCsv();
+        return true;
     }
 }

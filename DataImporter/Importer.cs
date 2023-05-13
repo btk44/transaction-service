@@ -49,7 +49,7 @@ public class Importer {
     public async Task ImportFromCsv(){
         IEnumerable<TransactionRow> records;
 
-        using (var reader = new StreamReader("DataImporter\\TestData.csv"))
+        using (var reader = new StreamReader("DataImporter/TestData.csv"))
         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
             records = csv.GetRecords<TransactionRow>().ToList();
