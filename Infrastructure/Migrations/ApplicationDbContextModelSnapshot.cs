@@ -76,11 +76,32 @@ namespace TransactionService.Infrastructure.Migrations
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
 
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ParentId");
 
+                    b.HasIndex("TypeId");
+
                     b.ToTable("Category", (string)null);
+                });
+
+            modelBuilder.Entity("TransactionService.Domain.Types.CategoryType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CategoryTypes");
                 });
 
             modelBuilder.Entity("TransactionService.Domain.Types.Currency", b =>
@@ -196,7 +217,15 @@ namespace TransactionService.Infrastructure.Migrations
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("TransactionService.Domain.Types.CategoryType", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("ParentCategory");
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("TransactionService.Domain.Types.Transaction", b =>

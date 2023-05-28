@@ -10,6 +10,7 @@ public class CategorySearchCommand {
     public string Name { get; set; }
     public int Id { get; set; }
     public int ParentId { get; set; }
+    public int TypeId { get; set; }
     public bool Active { get; set; }
     public bool ActiveDefined { get; set; }
     public bool ReturnTreeStructure { get; set; }
@@ -44,6 +45,9 @@ public class CategorySearchCommandHandler
 
         if(command.ParentId > 0)
             categoryQuery = categoryQuery.Where(x => x.ParentId == command.ParentId);
+
+        if(command.TypeId > 0)
+            categoryQuery = categoryQuery.Where(x => x.TypeId == command.TypeId);
 
         var categories = await categoryQuery.Select(x => _categoryMapper.Map<CategoryDto>(x)).ToListAsync();
 

@@ -9,6 +9,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext{
     public DbSet<Account> Accounts { get; set;} 
     public DbSet<Currency> Currencies { get; set; }
     public DbSet<Category> Categories { get; set; }
+    public DbSet<CategoryType> CategoryTypes { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<VisualProperties> VisualProperties { get; set; }
 
@@ -32,6 +33,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext{
         modelBuilder.Entity<Category>().HasMany(x => x.SubCategories).WithOne(x => x.ParentCategory).OnDelete(DeleteBehavior.NoAction);
         modelBuilder.Entity<Category>().HasOne(x=> x.ParentCategory).WithMany(x=> x.SubCategories).HasForeignKey(x=> x.ParentId)
             .IsRequired(false).OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<Category>().HasOne(x => x.Type);
     }    
 
     private void Build<T>(EntityTypeBuilder<T> entity) where T : Base

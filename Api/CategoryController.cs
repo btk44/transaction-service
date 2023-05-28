@@ -24,4 +24,10 @@ public class CategoryController
         var categorySearchCommandHandler = new CategorySearchCommandHandler(_dbContext, _mapper);
         return await categorySearchCommandHandler.Handle(command);
     }
+
+    [HttpGet("types")]
+    public async Task<ActionResult<List<CategoryTypeDto>>> GetCategoryTypes(){
+        var categoryTypeQueryHandler = new CategoryTypeQueryHandler(_dbContext, _mapper);
+        return await categoryTypeQueryHandler.Handle();
+    }
 }

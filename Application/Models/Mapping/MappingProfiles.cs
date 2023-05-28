@@ -8,6 +8,7 @@ public class MappingProfiles: Profile {
     {
         CreateMap<Account, AccountDto>(); // no dto -> db for now
         CreateMap<Category, CategoryDto>(); // no dto -> db for now
+        CreateMap<CategoryType, CategoryTypeDto>(); // no dto -> db for now
         CreateMap<Transaction, TransactionDto>();
         CreateMap<TransactionDto, Transaction>();
     }

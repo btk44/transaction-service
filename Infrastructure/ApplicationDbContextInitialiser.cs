@@ -58,12 +58,22 @@ public class ApplicationDbContextInitialiser{
                 new Currency() { Description = "Romanian leu", Code = "RON" }
             };
 
-            _dbContext.Currencies.AddRange(currencies);
+            _dbContext.Currencies.AddRange(currencies);         
 
             await _dbContext.SaveChangesAsync();
-            return;
         }
 
-        Console.WriteLine("=== Currency data already inserted ===");
+        if(!_dbContext.CategoryTypes.Any()){
+            Console.WriteLine("=== Inserting category type data ===");
+            var types = new List<CategoryType>() {
+                new CategoryType() { Name = "Transfer" },
+                new CategoryType() { Name = "Expense" },
+                new CategoryType() { Name = "Income" },
+            };
+
+            _dbContext.CategoryTypes.AddRange(types);
+
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

@@ -58,6 +58,7 @@ public class Importer {
         var accounts = await _dbContext.Accounts.ToDictionaryAsync(x => x.Name);
         var categories = await _dbContext.Categories.ToDictionaryAsync(x => x.Name);
         var currency = await _dbContext.Currencies.FirstOrDefaultAsync(x => x.Code == "PLN");
+        var expenseType = await _dbContext.CategoryTypes.FirstOrDefaultAsync(x => x.Name == "Expense");
 
         foreach(TransactionRow record in records){
             if (record.AccountId <= 0)
@@ -85,12 +86,14 @@ public class Importer {
                 var newCategory = new Category(){
                     Name = record.CategoryName,
                     OwnerId = 1,
+                    TypeId = expenseType.Id, // change that manually later
                     SubCategories = new List<Category>() 
                 };
 
                 if (!string.IsNullOrEmpty(record.SubCategoryName)){
                     newCategory.SubCategories.Add(new Category(){
                             Name = record.SubCategoryName,
+                            TypeId = expenseType.Id, // change that manually later
                             OwnerId = 1
                         });
                 }
@@ -102,6 +105,7 @@ public class Importer {
 
                 parentCategory.SubCategories.Add(new Category(){
                     Name = record.SubCategoryName,
+                    TypeId = expenseType.Id, // change that manually later
                     OwnerId = 1
                 });
             }
