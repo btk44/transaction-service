@@ -66,9 +66,9 @@ public class ApplicationDbContextInitialiser{
         if(!_dbContext.CategoryTypes.Any()){
             Console.WriteLine("=== Inserting category type data ===");
             var types = new List<CategoryType>() {
-                new CategoryType() { Name = "Transfer" },
-                new CategoryType() { Name = "Expense" },
-                new CategoryType() { Name = "Income" },
+                new CategoryType() { Name = "Transfer", Code = "TR"},
+                new CategoryType() { Name = "Expense", Code = "EX" },
+                new CategoryType() { Name = "Income", Code = "IN" },
             };
 
             _dbContext.CategoryTypes.AddRange(types);
